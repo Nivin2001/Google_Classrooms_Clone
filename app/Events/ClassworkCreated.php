@@ -11,8 +11,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-// ShouldBroadcast عشان يتفعل مووضع ال sokets
-// channels -> (private , presence,public ). 
+ 
 class ClassworkCreated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;

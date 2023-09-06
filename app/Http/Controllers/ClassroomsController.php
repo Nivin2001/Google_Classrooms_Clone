@@ -22,9 +22,13 @@ use Illuminate\Support\Str;
 
 class ClassroomsController extends Controller
 {
-    
+    public function __construct()
+{
+    $this->middleware('auth');
+    $this->authorizeResource(Classroom::class,'classroom');
+}   
     // public function index(Request $requset , Test $test)
-    public function index(Request $requset): BaseView
+    public function index(Request $requset,Classroom $classroom ): BaseView
     {
 
         $classrooms = Classroom::active()

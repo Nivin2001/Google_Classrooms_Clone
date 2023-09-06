@@ -21,7 +21,7 @@ class HadaraSms
     ->withHeaders([
         'x-api-key' => $this->key,
         // 'Authorization' => 'Bearer'.$this->key,
-        // 'Authorization' => 'Basic'.$this->key,
+    // 'Authorization' => 'Basic'..this->key,
         ])
     ->withToken($this->key)
     ->post('sendmessage',[
@@ -31,7 +31,7 @@ class HadaraSms
     ]);
     // $json = $response->json();//بيحولخ ل json
     // $body = $response->body();//بيرجع ال body خام
-    dd($response->body());
+  //  dd($response->body());
    }
 
 }

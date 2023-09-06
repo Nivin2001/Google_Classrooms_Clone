@@ -31,7 +31,7 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
     'hadara' => [
-        'key' => env('HADARA_key'),
+        'key' => env('HADARA_KEY'),
     ],
 
 ];

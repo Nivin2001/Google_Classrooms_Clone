@@ -79,8 +79,7 @@ Route::middleware(['auth', 'user.preferences'])->group(function () {
 
     Route::get('/classrooms/{id}/edit', [ClassroomsController::class, 'edit'])
         ->name('classrooms.edit');
-    // Route::get('/classrooms/{id:code}/edit',[ClassroomsController::class ,'edit'])
-    // ->name('classrooms.edit');//رح يفهم انه يبحث حسب الكود مش ال id 
+    
     Route::get('/classrooms/{id}', [ClassroomsController::class, 'show'])
         ->name('classrooms.show')
         ->where('id', '\d+');
@@ -89,9 +88,7 @@ Route::middleware(['auth', 'user.preferences'])->group(function () {
         ->where('id', '\d+');
     Route::delete('/classrooms/{id}', [ClassroomsController::class, 'destroy'])
         ->name('classrooms.destroy');
-    // ->where('edit','yes|no');//digit or more
-    // ->where('id','[0-9]+');//digit or more
-    //->where('id','.+');//any character
+   
 
     Route::post('comments', [CommentsController::class, 'store'])
         ->name('comments.store');

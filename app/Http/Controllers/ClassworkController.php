@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\Rule;
 
 class ClassworkController extends Controller
 {
@@ -45,11 +46,7 @@ class ClassworkController extends Controller
     {
         $this->authorize('view-any', [Classwork::class, $classroom]);
 
-        // $classworks =$classroom->classworks()->get();
-        // $classworks =$classroom->classworks;//هنا لحاله حيعمل get لما استدعيها كانها property
-        // $assignments =$classroom->classworks()//هنا رح يرجع اوبجكت الريليشن
-        // ->where('type','=',Classwork::TYPE_ASSAIGNMENT)
-        // ->get();
+      
         $classworks = $classroom->classworks()
             ->with('topic') //Eager load
             ->withCount([
@@ -98,24 +95,7 @@ class ClassworkController extends Controller
      */
     public function create(Request $request, Classroom $classroom)
     {
-        // dd($request->type);
         $this->authorize('create', [Classwork::class, $classroom]);
-        // $response = Gate::inspect('classworks.create',[$classroom]);
-        // if($response->denied()){
-        //     abort (403,$response->message() ?? '');
-        // }
-        // Gate::authorize('classworks.create',[$classroom]);
-        // if(Gate::denies('classworks.create',[$classroom])){
-        //     abort (403,'you are not allowed to do this action ');
-        // }
-        // $type =$request->query('type') ;
-        // // $type =request()->query('type') ;
-        // $allowed_types = [
-        //     Classwork::TYPE_ASSAIGNMENT , Classwork::TYPE_MATERIAL , Classwork::TYPE_QUESTION
-        // ];
-        // if(!in_array($type,$allowed_types)) {
-        //     $type =Classwork::TYPE_ASSAIGNMENT ;
-        // }
         $type = $this->getType($request);
         $classwork = new Classwork();
         return view('classworks.create', compact('classroom', 'classwork', 'type'));
@@ -124,17 +104,20 @@ class ClassworkController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ClassworkRequest $request, Classroom $classroom, Classwork $classwork)
+    public function store(Request $request, Classroom $classroom, Classwork $classwork)
     {
         $this->authorize('create', [Classwork::class, $classroom]);
-
-        // if(Gate::denies('classworks.create',[$classroom])){
-        //     abort (403,'you are not allowed to do this action ');
-        // }
         $type = $this->getType($request);
         // dd($type);
-        $validated = $request->validated();
-        $request->merge([
+       // $validated = $request->validated();
+       $request->validate([
+        'title' => ['required', 'string', 'max:255'],
+        'description' => ['nullable', 'string'],
+        'topic_id' => ['nullable', 'int', 'exists:topics,id'],
+        'options.grade' => [Rule::requiredIf(fn () => $type == 'assignment' || $type == 'question'), 'numeric', 'min:0'],
+        'options.due' => ['nullable', 'date', 'after:published_at'],
+    ]); 
+       $request->merge([
             'user_id' => Auth::id(),
             'type' => $type,
         ]);
@@ -155,7 +138,6 @@ class ClassworkController extends Controller
                 //     //     'grade' => $request->input('grade'),
                 //     //     'due' => $request->input('due'),
                 //     // ]),  
-                //     //بعد ما ضفنا الcast على المودل
                 //     'published_at' => $request->input('published_at'),
                 //     'options' => $request->input('options'),//طالما خلينا اسماء الحقول بدلاة مصفوفة لل options
                 //     // 'options' => [
@@ -168,29 +150,29 @@ class ClassworkController extends Controller
 
                 $classwork->users()->attach($request->input('students'));
                 // event('classwork.created',[$classroom,$classwork]);
-                // event(new ClassworkCreated($classwork));
-                ClassworkCreated::dispatch($classwork);
+                 event(new ClassworkCreated($classwork));
+               //ClassworkCreated::dispatch($classwork);
             });
-        } catch (\Exception $e) {
-            throw $e;
+        } catch (Exception $e) {
+           // throw $e;
             return back()->with('error', $e->getMessage());
         }
 
         return redirect()->route('classroom.classwork.index', $classroom->id)
-            ->with('success', "Classwork $classwork->title Created♥");
+            ->with('success', "Classwork $classwork->title Created successfully");
     }
     /**
      * Display the specified resource.
      */
     public function show(Classroom $classroom, Classwork $classwork)
     {
-        // $this->authorize('view',$classwork);
+          $this->authorize('view',$classwork);
         //    Gate::authorize('classworks.view',[$classwork]);
         $submissions = Auth::user()
             ->submissions()
             ->where('classwork_id', $classwork->id)
             ->get();
-        // $classwork->load('comments.user');//eagr loading with model pinding
+          $classwork->load('comments.user');//eagr loading with model pinding
         return view('classworks.show', compact('classroom', 'classwork', 'submissions'));
     }
 
@@ -199,10 +181,11 @@ class ClassworkController extends Controller
      */
     public function edit(Request $request, Classroom $classroom, Classwork $classwork)
     {
-        $this->authorize('update', $classwork);
+        //$this->authorize('update', $classwork);
 
-        // $classwork = $classroom->classworks()->findOrFail($classwork->id);
-        $type = $classwork->type; //لانه نوعه صار enum
+        $classwork = $classroom->classworks()->findOrFail($classwork->id);
+        $type = $classwork->type->value;
+        //$type = $classwork->type; 
         $assigned = $classroom->users()->pluck('id')->toArray(); //pluckبترجعلنا collection واحنا بنتعامل مع array
         return view('classworks.edit', compact('classroom', 'classwork', 'type', 'assigned'));
     }
@@ -225,7 +208,7 @@ class ClassworkController extends Controller
      */
     public function destroy(Classroom $classroom, Classwork $classwork)
     {
-        $this->authorize('delete', $classwork);
+        //$this->authorize('delete', $classwork);
 
         $classwork = $classroom->classworks()->findOrFail($classwork->id);
         $classwork->delete();

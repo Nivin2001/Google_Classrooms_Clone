@@ -35,7 +35,7 @@
     <x-form.input type="file" name="cover_image" :value="$classroom->cover_image" placeholder="Classroom Cover Image">
         @if ($classroom->cover_image_path)
             <x-slot:label>
-                <img src="{{ asset('uploads/' . $classroom->cover_image_path) }}" alt="Cover Image">
+                <img src="{{ asset('uploads/covers/'. $classroom->cover_image_path) }}" alt="Cover Image">
             </x-slot:label>
         @endif
     </x-form.input>

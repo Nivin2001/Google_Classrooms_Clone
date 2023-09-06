@@ -111,7 +111,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasLocalePreferen
     }
     public function routeNotificationForVonage($notification = null)
     {
-        return '+972594302492' ;
+        return '+972566076007' ;
         // return $this->mobile_phone;
     }
     public function recievesBroadcastNotificationsOn()
@@ -127,6 +127,6 @@ class User extends Authenticatable implements MustVerifyEmail, HasLocalePreferen
 
     public function routeNotificationForHadara()
     {
-        return '+972594302492' ;
+        return '+972566076007' ;
     }
 }

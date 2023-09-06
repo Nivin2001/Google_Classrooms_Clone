@@ -1,9 +1,5 @@
 
 <x-main-layout title="Classrooms">
-
-{{-- <p> Welcome {{ $name }} , {{ $title  }} </p>
-    <a href="{{ route('classrooms.show',['edit' => 1 ,'id' => 56], false)}}" >Create</a>
-    <a href="{{ route(name: 'classrooms.create', absolute:false)}}" >Create</a> --}}
 <x-form.alert name="success" class="alert-success"></x-form.alert>
 <x-form.alert name="error" class="alert-danger"></x-form.alert>
 <div class="container">
@@ -30,6 +26,7 @@
     {{ $classrooms->withQueryString()->appends(['v' => 1])->links() }}
 </div>
 
+<a href="{{ route(name: 'classrooms.create', absolute:false)}}" >Create</a>
 {{-- @pushIf('true','script')
  <script>console.log('@@stack')</script>  @stack  
 @endpushIf --}}

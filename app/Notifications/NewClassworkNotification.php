@@ -43,9 +43,10 @@ class NewClassworkNotification extends Notification
         // }
         return [
             'database',
-            // HadaraSmsChannel::class,
+           HadaraSmsChannel::class,
              'broadcast',
               'mail',
+             // 'vonage',
         ];
     }
 

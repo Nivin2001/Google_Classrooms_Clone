@@ -29,5 +29,5 @@
 </div>
 </x-main-layout>
 {{-- @pushIf('true','script')
- <script>console.log('@@stack')</script>رح يطبع بالكونسول @stack  
+ <script>console.log('@@stack')</script>   @stack  
 @endpushIf --}}
