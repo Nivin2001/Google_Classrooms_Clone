@@ -33,5 +33,5 @@ return [
     'hadara' => [
         'key' => env('HADARA_KEY'),
     ],
-
+  //'api_key'=>env('API_KEY')
 ];

@@ -15,18 +15,19 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
       //  \App\Models\User::factory(10)->create();
-        \App\Models\Topic::factory(10)->create([
-            'classroom_id' => 1,
-        ]);
+        // \App\Models\Topic::factory(4)->create([
+        //     'classroom_id' => 1,
+        // ]);
 
         // \App\Models\User::factory()->create([
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
-        $this->call([
-        //     UserSeeder::class
-             ClassroomSeeder::class
-        ]);
+        // $this->call([
+        // //     UserSeeder::class
+        //      ClassroomSeeder::class
+        // ]);
+        \App\Models\Admin::factory(4)->create();
         
     }
 }

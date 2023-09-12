@@ -1,6 +1,10 @@
 
 <?php
 
+use App\Http\Controllers\paymentsController;
+use App\Http\Controllers\PlansController;
+use App\Http\Controllers\Webhooks\StripeController;
+use Faker\Provider\ar_EG\Payment;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClassroomsController;
 use App\Http\Controllers\JoinClassroomController;
@@ -27,6 +31,9 @@ use App\Http\Controllers\SubmissionController;
 Route::get('/', function () {
     return view('welcome');
 });
+// require __DIR__ . '/auth.php';
+Route::get('plans',[PlansController::class,'index'])
+->name('plans');
 Route::prefix('classroom/{classroom}/topics/trashed')
     ->as('topics.')
     ->controller(TopicsController::class)
@@ -38,7 +45,22 @@ Route::prefix('classroom/{classroom}/topics/trashed')
         Route::delete('/{topic}', 'forceDelete')
             ->name('force-delete');
     })->middleware('auth');
+
 Route::middleware(['auth', 'user.preferences'])->group(function () {
+    Route::get('subscription/{subscription}/checkout',[PaymentController::class,'create'])
+        ->name('checkout');
+    
+    
+    Route::post('subscriptions',[SubmissionController::class,'store'])
+        ->name('subscriptions.store');
+        Route::post('payments',[PaymentController::class,'store'])
+        ->name('payments.store');
+
+        Route::get('/payments/{supscription}/success',[paymentsController::class,'success'])
+        ->name('payments.success');
+        Route::get('/payments/{supscription}/cancel',[paymentsController::class,'cancel'])
+        ->name('payments.cancel');
+
     Route::get('change-language/{locale}', [ProfileController::class, 'changeLanguage'])
         ->name('changeLanguage');
     Route::prefix('/classrooms/trashed')
@@ -106,7 +128,7 @@ Route::get('/', function () {
 
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth:admin', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -114,4 +136,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__ . '/auth.php';
+Route::post('/payments/stripe/webhook',[StripeController::class]);

@@ -27,7 +27,14 @@ class Classroom extends Model
         'name', 'subject', 'section', 'room', 'user_id',
         '_Token', 'theme', 'cover_image_path', 'code',
     ];
-
+protected $appends=[
+    ' cover_image_url',
+   
+];
+protected $hidden=[
+    'cover_image_path' ,
+    'deleted_at',
+];
     public function scopeFilter(Builder $query, array $filters)
     {
         if ($filters['search'] ?? false) {
@@ -91,7 +98,9 @@ class Classroom extends Model
     {
         return $this->hasMany(Topic::class, 'classroom_id', 'id');
     }
-
+public function user(){
+    return $this->belongsTo(User::class);
+}
     public function users()
     {
         return $this->belongsToMany(

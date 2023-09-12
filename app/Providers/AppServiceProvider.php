@@ -6,6 +6,7 @@ use App\Models\Classwork;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -29,11 +30,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        //ResourceCollection::withoutWrapping();
         //ما رح يتنفذوا لانه السايكل للارافيل ما بتروح ع session و بتبداه فما حيقدر يحدد اليوزر اذا ،فبنعرفه بiddleware 
         // $user = Auth::user();
         // App::setLocale($user->profile->locale);
         // App::setlocale('ar');
-        Paginator::useBootstrapFive();
+        Paginator::defaultView('vendor.pagination.bootstrap-5');
+        Paginator::defaultSimpleView('vendor.pagination.simple-bootstrap-5');
+        //Paginator::useBootstrapFive();
         // Paginator::defaultView();
         Relation::enforceMorphMap([
             'classwork' => Classwork::class,

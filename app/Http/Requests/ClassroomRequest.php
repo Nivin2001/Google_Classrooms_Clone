@@ -20,7 +20,8 @@ class ClassroomRequest extends FormRequest
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
      */
     public function rules(): array
-    {
+    {    
+        $id=$this->route('classroom',0);
         
         return [
             'name' => ['required','string','max:255', function($attribute,$value ,$fail){
@@ -30,7 +31,7 @@ class ClassroomRequest extends FormRequest
             }],
             'section' => 'nullable|string|max:255',
             'subject' => 'nullable|string|max:255',
-            'room' => 'nullable|string|max:255',
+            'room' => "nullable|string|max:255|unique:classrooms,room,$id",
             'cover_image' => [
                 'image',
                 'dimensions:min_width:200,min_height=100,max_width:4000 ,max_height=4000',

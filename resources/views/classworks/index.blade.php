@@ -90,7 +90,7 @@
     </div>
     @push('scripts')
     <script>
-        const classroomId="{{$classwork->classroom_id}}";
+        // const classroomId="{{--{{$classwork->classroom_id}}--}}";
     </script>
     @vite(['resources/js/app.js'])
     @endpush

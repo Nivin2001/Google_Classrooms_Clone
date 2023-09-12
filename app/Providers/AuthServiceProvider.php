@@ -31,7 +31,7 @@ class AuthServiceProvider extends ServiceProvider
     {
         // لو بدي اعمل نظام log بعد كل خطوة بتصير (after)
         //اذا عنا حد اله صلاحية لكل اشي 
-        Gate::before(function(User $user,$ability){
+        Gate::before(function( $user,$ability){
             if ($user->super_admin){
                  return true;
             }
