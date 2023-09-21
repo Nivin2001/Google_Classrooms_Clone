@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Admin;
+use App\Models\Classroom;
 use App\Models\Classwork;
 use App\Models\Post;
 use App\Models\User;
@@ -19,17 +21,20 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+      if(App::environment('production')){
+           $this->app->instance('path.public',base_path('public_html'));
         //
         // $this->app->bind('x',function(){
         //     return new \App\Services\x();
         // });
-    }
+    }}
 
     /**
      * Bootstrap any application services.
      */
     public function boot(): void
     {
+            
         //ResourceCollection::withoutWrapping();
         //ما رح يتنفذوا لانه السايكل للارافيل ما بتروح ع session و بتبداه فما حيقدر يحدد اليوزر اذا ،فبنعرفه بiddleware 
         // $user = Auth::user();
@@ -43,6 +48,8 @@ class AppServiceProvider extends ServiceProvider
             'classwork' => Classwork::class,
             'post' => Post::class,
             'user' => User::class,
+            'classroom'=>Classroom::class,
+            'admin'=>Admin::class,
         ]);
     }
 }

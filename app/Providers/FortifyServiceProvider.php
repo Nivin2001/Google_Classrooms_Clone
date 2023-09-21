@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
+use Laravel\Fortify\Contracts\LoginResponse;
+use Laravel\Fortify\Contracts\LoginViewResponse;
 use Laravel\Fortify\Fortify;
 
 class FortifyServiceProvider extends ServiceProvider
@@ -25,22 +27,43 @@ class FortifyServiceProvider extends ServiceProvider
     {
        if(request()->is('/admin','/admin/*')){
         Config::set([
-            'fortify.guade'=>'admin',
-            'fortify.password'=>'admins',
+            'fortify.guarde'=>'admin',
+            'fortify.passwords'=>'admins',
             'fortify.prefix'=>'admin',
-            'fortify.username'=>'admin',
+            'fortify.username'=>'username',
 
 
         ]);
         }
+        
+        $loginRes=new class implements LoginResponse 
+        {
+     
+    
+            public function toResponse($request)
+            {
+             $user=$request->user();
+             if($user instanceof Admin){
+            return redirect('admin/2fa');
+
+             }
+             return redirect()->intended(route('classrooms.index'));
+            }
+            };
+
+        //   $this->app->singleton(LoginViewResponse::class,$loginRes);
+      
+        
     }
+    
 
     /**
      * Bootstrap any application services.
      */
+    
     public function boot(): void
     {
-        
+    
         Fortify::createUsersUsing(CreateNewUser::class);
         Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);

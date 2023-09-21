@@ -12,7 +12,7 @@ use Illuminate\Notifications\Messages\VonageMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class NewClassworkNotification extends Notification
+class NewClassworkNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -21,7 +21,9 @@ class NewClassworkNotification extends Notification
      */
     public function __construct(protected Classwork $classwork)
     {
-        //
+        $this->onQueue('notifications');
+
+
     }
 
     /**
@@ -43,9 +45,10 @@ class NewClassworkNotification extends Notification
         // }
         return [
             'database',
-           HadaraSmsChannel::class,
-             'broadcast',
-              'mail',
+           FcmChannel::class, //geeks-classroom-25f07-0cfe025124d2.json
+          // HadaraSmsChannel::class,
+           //  'broadcast',
+          //    'mail',
              // 'vonage',
         ];
     }
@@ -119,7 +122,31 @@ class NewClassworkNotification extends Notification
     {
         return __('A new classwork created!');
     }
+    public function toFcm($notifiable)
+    { 
 
+
+        $content = __(':name posted a new :type: :title', [
+            'name' => $this->classwork->user->name,
+            'type' => $this->classwork->type,
+            'title' => $this->classwork->title,
+        ]);
+        return FcmMessage::create()
+            ->setData(['classwork_id'=>$this->classwork->id,
+            'user_id'=>$this->classwork->user,
+            ])
+            ->setNotification(\NotificationChannels\Fcm\Resources\Notification::create()
+                ->setTitle('New Classwork')
+                ->setBody($content)
+                ->setImage('http://example.com/url-to-image-here.png'))
+            ->setAndroid(
+                AndroidConfig::create()
+                    ->setFcmOptions(AndroidFcmOptions::create()->setAnalyticsLabel('analytics'))
+                    ->setNotification(AndroidNotification::create()->setColor('#0A0A0A'))
+            )->setApns(
+                ApnsConfig::create()
+                    ->setFcmOptions(ApnsFcmOptions::create()->setAnalyticsLabel('analytics_ios')));
+    }
 
     /**
      * Get the array representation of the notification.
@@ -132,4 +159,5 @@ class NewClassworkNotification extends Notification
             //
         ];
     }
+    // public function toArray()
 }

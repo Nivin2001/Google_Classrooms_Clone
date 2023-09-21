@@ -24,17 +24,24 @@ class Classroom extends Model
     public static string $disk = 'uploads';
 
     protected $fillable = [
-        'name', 'subject', 'section', 'room', 'user_id',
-        '_Token', 'theme', 'cover_image_path', 'code',
+        'name',
+        'subject',
+        'section',
+        'room',
+        'user_id',
+        '_Token',
+        'theme',
+        'cover_image_path',
+        'code',
     ];
-protected $appends=[
-    ' cover_image_url',
-   
-];
-protected $hidden=[
-    'cover_image_path' ,
-    'deleted_at',
-];
+    protected $appends = [
+        ' cover_image_url',
+
+    ];
+    protected $hidden = [
+        'cover_image_path',
+        'deleted_at',
+    ];
     public function scopeFilter(Builder $query, array $filters)
     {
         if ($filters['search'] ?? false) {
@@ -88,19 +95,20 @@ protected $hidden=[
     {
         return $this->hasMany(Classwork::class, 'classroom_id', 'id');
     }
-    
+
     public function posts(): HasMany
     {
-        return $this->hasMany(Post::class,'classroom_id','id');
+        return $this->hasMany(Post::class, 'classroom_id', 'id');
     }
 
     public function topics(): HasMany
     {
         return $this->hasMany(Topic::class, 'classroom_id', 'id');
     }
-public function user(){
-    return $this->belongsTo(User::class);
-}
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
     public function users()
     {
         return $this->belongsToMany(
@@ -126,9 +134,19 @@ public function user(){
     public function streams()
     {
         return $this->hasMany(Stream::class)
-        ->latest();
+            ->latest();
+    }
+    public function receivedmessages()
+    {
+        return $this->morphMany(Message::class, 'recipient');
+
+
     }
 
+    public function sentMessages()
+    {
+        return $this->hasMany(Message::class, 'sender_id');
+    }
     public function getRouteKeyName()
     {
         return 'id';

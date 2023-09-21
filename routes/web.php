@@ -46,23 +46,20 @@ Route::prefix('classroom/{classroom}/topics/trashed')
             ->name('force-delete');
     })->middleware('auth');
 
-Route::middleware(['auth', 'user.preferences'])->group(function () {
+Route::middleware(['auth:web,admin'])->group(function () {
     Route::get('subscription/{subscription}/checkout',[PaymentController::class,'create'])
         ->name('checkout');
-    
-    
     Route::post('subscriptions',[SubmissionController::class,'store'])
         ->name('subscriptions.store');
-        Route::post('payments',[PaymentController::class,'store'])
+    Route::post('payments',[PaymentController::class,'store'])
         ->name('payments.store');
-
-        Route::get('/payments/{supscription}/success',[paymentsController::class,'success'])
+    Route::get('/payments/{supscription}/success',[paymentsController::class,'success'])
         ->name('payments.success');
-        Route::get('/payments/{supscription}/cancel',[paymentsController::class,'cancel'])
+    Route::get('/payments/{supscription}/cancel',[paymentsController::class,'cancel'])
         ->name('payments.cancel');
-
     Route::get('change-language/{locale}', [ProfileController::class, 'changeLanguage'])
         ->name('changeLanguage');
+        //////////////////////////////////////////////////////////////////
     Route::prefix('/classrooms/trashed')
         ->as('classrooms.')
         ->controller(ClassroomsController::class)
@@ -78,14 +75,15 @@ Route::middleware(['auth', 'user.preferences'])->group(function () {
         ->name('classroom.streams');
     Route::resource('classroom.post', PostController::class);
     Route::get('submissions/{submission}/file', [SubmissionController::class, 'file'])->name('file');
-    Route::resource('classroom.classwork', ClassworkController::class);
-    // ->shallow();
+    Route::resource('classroom.classwork', ClassworkController::class)
+    ->shallow();
     //shallow-> بتخلي راوت destroy,update,edit,show بدون ما يمرر كلاس رووم باراميتر
     Route::get('/classrooms/{classroom}/join', [JoinClassroomController::class, 'create'])
         ->middleware('signed')
         ->name('classrooms.join');
-
     Route::post('/classrooms/{classroom}/join', [JoinClassroomController::class, 'store']);
+    Route::post('/classrooms/{classroom}/chat', [ClassroomsController::class, 'classrooms.chat']);
+
     Route::get('/classrooms/{classroom}/people', [ClassroomPeopleController::class, 'index'])
         ->name('classrooms.people'); //invokable Controller
     Route::delete('/classrooms/{classroom}/people', [ClassroomPeopleController::class, 'destroy'])

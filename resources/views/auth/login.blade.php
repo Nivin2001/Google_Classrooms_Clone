@@ -9,9 +9,9 @@
 
         <!-- Email Address -->
         <div>
-            <x-input-label for="username" :value="__('username')" />
-            <x-text-input id="username" class="block mt-1 w-full" type="username" name="usernam" :value="old('username')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('usernam')" class="mt-2" />
+            <x-input-label for="{{config('fortify.username')}}" :value="__('username')" />
+            <x-text-input id="{{config('fortify.username')}}" class="block mt-1 w-full" type="username" name="{{config('fortify.username')}}" :value="old('username')" required autofocus autocomplete="{{config('fortify.username')}}" />
+            <x-input-error :messages="$errors->get(config('fortify.username'))" class="mt-2" />
         </div>
 
         <!-- Password -->

@@ -1,3 +1,6 @@
+@extends('layouts.master')
+@section('title',$classroom->name)
+@section('content')
 <x-main-layout title="Classroom Details">
 
     <div class="container">
