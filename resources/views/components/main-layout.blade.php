@@ -53,7 +53,7 @@
                             <ul class="dropdown-menu">
                                 <a class="dropdown-item" href="{{ route('changeLanguage', 'en') }}">English</a>
                                 <a class="dropdown-item" href="{{ route('changeLanguage', 'ar') }}">العربية</a>
-    
+
                             </ul>
                         </li>
                         <x-user-notifications-menu count="5" />
@@ -107,7 +107,7 @@
         const userId = "{{ Auth::id() }}";
           </script>
      @stack('scripts')
-    @vite(['resources/js/app.js'])
+    {{-- @vite(['resources/js/app.js']) --}}
 </body>
 
 </html>

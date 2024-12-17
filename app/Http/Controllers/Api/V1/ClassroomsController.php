@@ -34,7 +34,7 @@ class ClassroomsController extends Controller
     public function store(Request $request)
     {if(!Auth::guard('sunctum')->user()->tokenCan('classroom.create')){
         abort(403);
- 
+
      }
         try{
         $request->validate([
@@ -58,13 +58,13 @@ class ClassroomsController extends Controller
      * Display the specified resource.
      */
     public function show(Classroom $classroom)
-    {  
+    {
         if(!Auth::guard('sunctum')->user()->tokenCan('classrooms.read')){
             abort(403);
-     
+
          }
         $classroom->load('user')->loadCount('students'); //Classroom::findOrFail($id);
-       return new ClassroomResource($classroom); 
+       return new ClassroomResource($classroom);
     }
 
     /**
@@ -73,13 +73,13 @@ class ClassroomsController extends Controller
     public function update(Request $request, Classroom $classroom)
     {if(!Auth::guard('sunctum')->user()->tokenCan('classrooms.update')){
         abort(403);
- 
+
      }
         $request->validate([
             'name'=>['sometimes','required',Rule::unique('classrooms','name')->ignore($classroom->id)],
             'section'=>['sometimes', 'required'],
         ]);
-        $classroom->update($request->all()); 
+        $classroom->update($request->all());
         return [
             'code'=>100,
             'message'=>__('Classroom updated.'),
@@ -94,11 +94,11 @@ class ClassroomsController extends Controller
     {
         if(!Auth::guard('sunctum')->user()->tokenCan('classrooms.delete')){
             abort(403,'You cannot delete this user');
-     
+
          }
        Classroom::destroy($id);
     return Response::json([],204);
-    
+
        //    return // [
     //     'code'=>100,
     //     'message'=>__('Classroom deleted.'),

@@ -95,11 +95,11 @@ Route::middleware(['auth:web,admin'])->group(function () {
         ->name('classrooms.create');
     Route::post('/classrooms', [ClassroomsController::class, 'store'])
         ->name('classrooms.store');
-    //Route::get('/classrooms/create',[ClassroomsController::class ,'index']);رح يرجع التاني لو كانوا نفس الميثود والباث 
+    //Route::get('/classrooms/create',[ClassroomsController::class ,'index']);رح يرجع التاني لو كانوا نفس الميثود والباث
 
     Route::get('/classrooms/{id}/edit', [ClassroomsController::class, 'edit'])
         ->name('classrooms.edit');
-    
+
     Route::get('/classrooms/{id}', [ClassroomsController::class, 'show'])
         ->name('classrooms.show')
         ->where('id', '\d+');
@@ -108,7 +108,7 @@ Route::middleware(['auth:web,admin'])->group(function () {
         ->where('id', '\d+');
     Route::delete('/classrooms/{id}', [ClassroomsController::class, 'destroy'])
         ->name('classrooms.destroy');
-   
+
 
     Route::post('comments', [CommentsController::class, 'store'])
         ->name('comments.store');
